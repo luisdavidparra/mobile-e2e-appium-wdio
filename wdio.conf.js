@@ -35,4 +35,16 @@ exports.config = {
     ui: "bdd",
     timeout: 60000,
   },
+
+  before: async function () {
+    try {
+      const okBtn = await $(
+        'android=new UiSelector().resourceId("android:id/button2")',
+      );
+      await okBtn.isDisplayed({ timeout: 3000 });
+      await okBtn.click();
+    } catch (e) {
+      // No popup found, continuing
+    }
+  },
 };
