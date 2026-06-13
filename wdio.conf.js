@@ -1,5 +1,27 @@
 const path = require("path");
 
+async function resetApp() {
+  await driver.terminateApp("com.saucelabs.mydemoapp.rn");
+  await driver.executeScript("mobile: clearApp", [
+    {
+      appId: "com.saucelabs.mydemoapp.rn",
+    },
+  ]);
+  await driver.activateApp("com.saucelabs.mydemoapp.rn");
+}
+
+async function dismissPopupIfPresent() {
+  try {
+    const okBtn = await $(
+      'android=new UiSelector().resourceId("android:id/button2")',
+    );
+    await okBtn.waitForDisplayed({ timeout: 3000 });
+    await okBtn.click();
+  } catch (e) {
+    // No popup found, continuing
+  }
+}
+
 exports.config = {
   runner: "local",
   port: 4723,
@@ -20,7 +42,7 @@ exports.config = {
     },
   ],
 
-  logLevel: "info",
+  logLevel: "error",
   bail: 0,
   waitforTimeout: 10000,
   connectionRetryTimeout: 120000,
@@ -36,15 +58,8 @@ exports.config = {
     timeout: 60000,
   },
 
-  before: async function () {
-    try {
-      const okBtn = await $(
-        'android=new UiSelector().resourceId("android:id/button2")',
-      );
-      await okBtn.isDisplayed({ timeout: 3000 });
-      await okBtn.click();
-    } catch (e) {
-      // No popup found, continuing
-    }
+  beforeTest: async function () {
+    await resetApp();
+    await dismissPopupIfPresent();
   },
 };

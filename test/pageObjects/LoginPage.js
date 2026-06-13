@@ -11,6 +11,12 @@ class LoginPage {
     return $("~Login button");
   }
 
+  get invalidCredentialsMessage() {
+    return $(
+      'android=new UiSelector().text("Provided credentials do not match any user in this service.")',
+    );
+  }
+
   async login(username, password) {
     await this.usernameInput.setValue(username);
     await this.passwordInput.setValue(password);
