@@ -1,6 +1,6 @@
 const LoginPage = require("../pageObjects/LoginPage");
 const CommonPage = require("../pageObjects/CommonPage");
-const ProductsPage = require("../pageObjects/ProductsPage");
+const CatalogPage = require("../pageObjects/CatalogPage");
 const { standard, invalid } = require("../data/user");
 
 describe("US-01 - Authentication", () => {
@@ -8,7 +8,7 @@ describe("US-01 - Authentication", () => {
     await CommonPage.navigateToLoginPage();
     await LoginPage.login(standard.username, standard.password);
 
-    await expect(ProductsPage.productsPageHeaderText).toBeDisplayed();
+    await expect(CatalogPage.catalogPageHeaderText).toBeDisplayed();
   });
 
   it("TC-002 - should display error message with invalid credentials", async () => {

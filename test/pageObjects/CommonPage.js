@@ -3,6 +3,10 @@ class CommonPage {
     return $("~open menu");
   }
 
+  get catalogSidebarButton() {
+    return $("~menu item catalog");
+  }
+
   get loginSidebarButton() {
     return $("~menu item log in");
   }
@@ -26,6 +30,11 @@ class CommonPage {
   async navigateToLoginPage() {
     await this.sidebarToggler.click();
     await this.loginSidebarButton.click();
+  }
+
+  async navigateToCatalogPage() {
+    await this.sidebarToggler.click();
+    await this.catalogSidebarButton.click();
   }
 
   async logout() {
