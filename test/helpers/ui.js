@@ -1,23 +1,39 @@
-async function getAllElementTextsByScrolling(
-  selector,
+async function getAllProductsByScrolling(
+  CatalogPage,
   expectedCount = Infinity,
 ) {
-  const collected = new Set();
-  let previousSource = "";
+  const collected = new Map();
+  let previousCount = 0;
+
+  await $(CatalogPage.productItemSelector).waitForDisplayed({ timeout: 5000 });
 
   while (collected.size < expectedCount) {
-    // Add element text to collected ignoring duplicated
-    const elements = await $$(selector);
-    for (const el of elements) {
-      const text = await el.getText();
-      collected.add(text);
+    const items = await $$(CatalogPage.productItemSelector);
+
+    for (const item of items) {
+      try {
+        const nameElement = await item.$(CatalogPage.productItemTitleSelector);
+        const priceElement = await item.$(CatalogPage.productItemPriceSelector);
+
+        if (
+          !(await nameElement.isExisting()) ||
+          !(await priceElement.isExisting())
+        )
+          continue;
+
+        const name = await nameElement.getText();
+        const price = await priceElement.getText();
+
+        collected.set(name, { name, price });
+      } catch (e) {
+        console.error(e);
+      }
     }
 
-    const currentSource = await driver.getPageSource();
-    if (currentSource === previousSource) break; // Bottom's page
-    previousSource = currentSource;
-
     if (collected.size >= expectedCount) break;
+    if (collected.size === previousCount) break; // No new items = bottom of list
+
+    previousCount = collected.size;
 
     await driver.execute("mobile: scrollGesture", {
       left: 100,
@@ -29,11 +45,24 @@ async function getAllElementTextsByScrolling(
     });
   }
 
-  return Array.from(collected);
+  return Array.from(collected.values());
+}
+
+async function sortCatalog(CatalogPage, optionButton) {
+  await CatalogPage.catalogPageHeaderText.waitForDisplayed();
+  await CatalogPage.sortButton.click();
+  await optionButton.click();
+
+  // Wait for first product to be rendered after sort
+  await waitElementForDisplayed(CatalogPage.productItemTitle);
 }
 
 async function waitElementForDisplayed(element) {
   await element.waitForDisplayed({ timeout: 5000 });
 }
 
-module.exports = { getAllElementTextsByScrolling, waitElementForDisplayed };
+module.exports = {
+  getAllProductsByScrolling,
+  sortCatalog,
+  waitElementForDisplayed,
+};

@@ -11,8 +11,16 @@ class CatalogPage {
     return $("~store item text");
   }
 
+  get productItemSelector() {
+    return "~store item";
+  }
+
   get productItemTitleSelector() {
     return "~store item text";
+  }
+
+  get productItemPriceSelector() {
+    return "~store item price";
   }
 
   get productItemTitleList() {
@@ -29,6 +37,14 @@ class CatalogPage {
 
   get sortByNameDescendingButton() {
     return $("~nameDesc");
+  }
+
+  get sortByPriceAscendingButton() {
+    return $("~priceAsc");
+  }
+
+  get sortByPriceDescendingButton() {
+    return $("~priceDesc");
   }
 }
 
