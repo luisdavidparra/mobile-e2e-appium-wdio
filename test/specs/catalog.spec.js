@@ -1,10 +1,7 @@
 const CatalogPage = require("../pageObjects/CatalogPage");
-const { products } = require("../data/products");
-const {
-  getAllProductsByScrolling,
-  sortCatalog,
-  waitElementForDisplayed,
-} = require("../helpers/ui");
+const ProductPage = require("../pageObjects/ProductPage");
+const { products, detailedProduct } = require("../data/products");
+const { waitElementForDisplayed } = require("../helpers/ui");
 
 describe("US-02 - Product Catalog and Filters", () => {
   it("TC-004 - should display all products on catalog page", async () => {
@@ -15,12 +12,9 @@ describe("US-02 - Product Catalog and Filters", () => {
   });
 
   it("TC-005 - should sort products by name ascending", async () => {
-    await sortCatalog(CatalogPage, CatalogPage.sortByNameAscendingButton);
+    await CatalogPage.sortCatalog(CatalogPage.sortByNameAscendingButton);
 
-    const displayedProducts = await getAllProductsByScrolling(
-      CatalogPage,
-      products.length,
-    );
+    const displayedProducts = await CatalogPage.getProducts(products.length);
     const displayedNames = displayedProducts.map((pro) => pro.name);
 
     const expectedNamesAsc = [...products]
@@ -31,12 +25,9 @@ describe("US-02 - Product Catalog and Filters", () => {
   });
 
   it("TC-006 - should sort products by name descending", async () => {
-    await sortCatalog(CatalogPage, CatalogPage.sortByNameDescendingButton);
+    await CatalogPage.sortCatalog(CatalogPage.sortByNameDescendingButton);
 
-    const displayedProducts = await getAllProductsByScrolling(
-      CatalogPage,
-      products.length,
-    );
+    const displayedProducts = await CatalogPage.getProducts(products.length);
     const displayedNames = displayedProducts.map((pro) => pro.name);
 
     const expectedNamesDesc = [...products]
@@ -47,12 +38,9 @@ describe("US-02 - Product Catalog and Filters", () => {
   });
 
   it("TC-007 - should sort products by price ascending", async () => {
-    await sortCatalog(CatalogPage, CatalogPage.sortByPriceAscendingButton);
+    await CatalogPage.sortCatalog(CatalogPage.sortByPriceAscendingButton);
 
-    const displayedProducts = await getAllProductsByScrolling(
-      CatalogPage,
-      products.length,
-    );
+    const displayedProducts = await CatalogPage.getProducts(products.length);
     const displayedPrices = displayedProducts.map((pro) => pro.price);
 
     const parsePrice = (price) => parseFloat(price.replace("$", ""));
@@ -64,12 +52,9 @@ describe("US-02 - Product Catalog and Filters", () => {
   });
 
   it("TC-008 - should sort products by price descending", async () => {
-    await sortCatalog(CatalogPage, CatalogPage.sortByPriceDescendingButton);
+    await CatalogPage.sortCatalog(CatalogPage.sortByPriceDescendingButton);
 
-    const displayedProducts = await getAllProductsByScrolling(
-      CatalogPage,
-      products.length,
-    );
+    const displayedProducts = await CatalogPage.getProducts(products.length);
     const displayedPrices = displayedProducts.map((pro) => pro.price);
 
     const parsePrice = (price) => parseFloat(price.replace("$", ""));
@@ -78,5 +63,21 @@ describe("US-02 - Product Catalog and Filters", () => {
       .map((p) => p.price);
 
     await expect(displayedPrices).toEqual(expectedPricesDesc);
+  });
+
+  it("TC-009 - should display product details when tapping a product", async () => {
+    await CatalogPage.tapProductByName(detailedProduct.name);
+
+    const displayedName = await ProductPage.titleByName(detailedProduct.name);
+    await waitElementForDisplayed(displayedName);
+
+    await expect(displayedName).toHaveText(detailedProduct.name);
+    await expect(ProductPage.price).toHaveText(detailedProduct.price);
+    await expect(ProductPage.description).toHaveText(
+      detailedProduct.description,
+    );
+    detailedProduct.colorOptions.forEach(async (option) => {
+      await expect(ProductPage.colorOption(option)).toBeDisplayed();
+    });
   });
 });

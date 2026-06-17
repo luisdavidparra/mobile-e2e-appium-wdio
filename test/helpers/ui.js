@@ -1,30 +1,27 @@
-async function getAllProductsByScrolling(
-  CatalogPage,
+async function getAllItemsByScrolling(
+  parentSelector,
+  childSelectors,
   expectedCount = Infinity,
 ) {
   const collected = new Map();
   let previousCount = 0;
 
-  await $(CatalogPage.productItemSelector).waitForDisplayed({ timeout: 5000 });
+  await $(parentSelector).waitForDisplayed({ timeout: 5000 });
 
   while (collected.size < expectedCount) {
-    const items = await $$(CatalogPage.productItemSelector);
+    const items = await $$(parentSelector);
 
     for (const item of items) {
       try {
-        const nameElement = await item.$(CatalogPage.productItemTitleSelector);
-        const priceElement = await item.$(CatalogPage.productItemPriceSelector);
-
-        if (
-          !(await nameElement.isExisting()) ||
-          !(await priceElement.isExisting())
-        )
-          continue;
-
-        const name = await nameElement.getText();
-        const price = await priceElement.getText();
-
-        collected.set(name, { name, price });
+        const result = {};
+        for (const { key, selector } of childSelectors) {
+          const child = await item.$(selector);
+          if (!(await child.isExisting())) continue;
+          result[key] = await child.getText();
+        }
+        if (Object.keys(result).length === childSelectors.length) {
+          collected.set(result[childSelectors[0].key], result);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -48,21 +45,11 @@ async function getAllProductsByScrolling(
   return Array.from(collected.values());
 }
 
-async function sortCatalog(CatalogPage, optionButton) {
-  await CatalogPage.catalogPageHeaderText.waitForDisplayed();
-  await CatalogPage.sortButton.click();
-  await optionButton.click();
-
-  // Wait for first product to be rendered after sort
-  await waitElementForDisplayed(CatalogPage.productItemTitle);
-}
-
 async function waitElementForDisplayed(element) {
   await element.waitForDisplayed({ timeout: 5000 });
 }
 
 module.exports = {
-  getAllProductsByScrolling,
-  sortCatalog,
+  getAllItemsByScrolling,
   waitElementForDisplayed,
 };

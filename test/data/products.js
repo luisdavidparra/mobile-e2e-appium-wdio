@@ -7,4 +7,11 @@ module.exports = {
     { name: "Sauce Labs Onesie", price: "$7.99" },
     { name: "Test.allTheThings() T-Shirt", price: "$15.99" },
   ],
+  detailedProduct: {
+    name: "Sauce Labs Backpack",
+    price: "$29.99",
+    description:
+      "carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.",
+    colorOptions: ["black", "blue", "gray", "red"],
+  },
 };

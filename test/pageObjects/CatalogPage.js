@@ -1,3 +1,8 @@
+const {
+  waitElementForDisplayed,
+  getAllItemsByScrolling,
+} = require("../helpers/ui");
+
 class CatalogPage {
   get catalogPageHeaderText() {
     return $('android=new UiSelector().text("Products")');
@@ -45,6 +50,35 @@ class CatalogPage {
 
   get sortByPriceDescendingButton() {
     return $("~priceDesc");
+  }
+
+  async getProducts(expectedCount = Infinity) {
+    return await getAllItemsByScrolling(
+      this.productItemSelector,
+      [
+        { key: "name", selector: this.productItemTitleSelector },
+        { key: "price", selector: this.productItemPriceSelector },
+      ],
+      expectedCount,
+    );
+  }
+
+  async sortCatalog(optionButton) {
+    await waitElementForDisplayed(this.catalogPageHeaderText);
+    await this.sortButton.click();
+    await optionButton.click();
+
+    // Wait for first product to be rendered after sort
+    await waitElementForDisplayed(this.productItemTitle);
+  }
+
+  async tapProductByName(productName) {
+    const items = await this.productItemList;
+    const target = await items.find(async (item) => {
+      const text = await item.$(this.productItemTitleSelector).getText();
+      return text === productName;
+    });
+    await target.click();
   }
 }
 
