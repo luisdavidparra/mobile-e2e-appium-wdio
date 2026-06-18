@@ -19,8 +19,7 @@ describe("US-01 - Authentication", () => {
   });
 
   it("TC-003 - should logout successfully", async () => {
-    await CommonPage.navigateToLoginPage();
-    await LoginPage.login(standard.username, standard.password);
+    await CommonPage.loginAsStandardUser();
 
     await CommonPage.logout();
 

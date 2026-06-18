@@ -1,3 +1,7 @@
+const { standard } = require("../data/user");
+const CatalogPage = require("./CatalogPage");
+const LoginPage = require("./LoginPage");
+
 class CommonPage {
   get sidebarToggler() {
     return $("~open menu");
@@ -43,6 +47,12 @@ class CommonPage {
 
   async navigateToMyCart() {
     await this.cartBadgeButton.click();
+  }
+
+  async loginAsStandardUser() {
+    await this.navigateToLoginPage();
+    await LoginPage.login(standard.username, standard.password);
+    await CatalogPage.catalogPageHeaderText.waitForDisplayed();
   }
 
   async logout() {

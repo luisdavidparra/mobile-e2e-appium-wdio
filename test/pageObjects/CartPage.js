@@ -43,6 +43,10 @@ class CartPage {
     return $("~Go Shopping button");
   }
 
+  get proceedToCheckoutButton() {
+    return $("~Proceed To Checkout button");
+  }
+
   async getProductDetailsByName(productName) {
     const products = await getAllItemsByScrolling(
       this.productContainerSelector,
