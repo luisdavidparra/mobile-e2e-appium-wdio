@@ -14,7 +14,7 @@ describe("US-03 - Shopping Cart Management", () => {
 
     await CommonPage.navigateToMyCart();
 
-    const productCartDetails = await CartPage.getCartItemByName(productName);
+    const productCartDetails = await CartPage.getProductDetailsByName(productName);
     await expect(Number(productCartDetails.amount)).toEqual(productsAmount);
 
     const amountText = `${productsAmount} item${productsAmount > 1 && "s"}`;
@@ -24,5 +24,23 @@ describe("US-03 - Shopping Cart Management", () => {
     const totalPrice = (Number(parsePrice) * productsAmount).toFixed(2);
 
     await expect(CartPage.totalCartPrice).toHaveText(`$${totalPrice}`);
+  });
+
+  it("TC-011 - should decrease product quantity in cart", async () => {
+    const productName = detailedProduct.name;
+    const initialAmount = 5;
+    const amountToRemove = 2;
+    const expectedAmount = initialAmount - amountToRemove;
+
+    await CatalogPage.tapProductByName(productName);
+    await ProductPage.addProductToShoppingCart(initialAmount);
+    await CommonPage.navigateToMyCart();
+
+    for (let i = 0; i < amountToRemove; i++) {
+      await CartPage.decreaseProductQuantity(productName);
+    }
+
+    const productDetails = await CartPage.getProductDetailsByName(productName);
+    await expect(Number(productDetails.amount)).toEqual(expectedAmount);
   });
 });

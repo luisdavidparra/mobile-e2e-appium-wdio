@@ -17,6 +17,10 @@ class CartPage {
     return 'android=new UiSelector().description("counter amount").childSelector(new UiSelector().className("android.widget.TextView"))';
   }
 
+  get minusButtonSelector() {
+    return "~counter minus button";
+  }
+
   get totalCartProducts() {
     return $("~total number");
   }
@@ -25,8 +29,8 @@ class CartPage {
     return $("~total price");
   }
 
-  async getCartItemByName(productName) {
-    const results = await getAllItemsByScrolling(
+  async getProductDetailsByName(productName) {
+    const products = await getAllItemsByScrolling(
       this.productContainerSelector,
       [
         { key: "name", selector: this.productNameSelector },
@@ -35,11 +39,22 @@ class CartPage {
       ],
       Infinity,
     );
-    return results.find((res) => res.name === productName);
+    return products.find((product) => product.name === productName);
   }
 
   async getTotalCartProducts() {
     return await this.totalCartProducts.getText();
+  }
+
+  async decreaseProductQuantity(productName) {
+    const rows = await $$(this.productContainerSelector);
+    const targetRow = await rows.find(async (row) => {
+      const name = await row.$(this.productNameSelector);
+      return (
+        (await name.isExisting()) && (await name.getText()) === productName
+      );
+    });
+    await targetRow.$(this.minusButtonSelector).click();
   }
 }
 
