@@ -27,6 +27,10 @@ class CommonPage {
     return $('android=new UiSelector().resourceId("android:id/button1")');
   }
 
+  get cartBadgeButton() {
+    return $("~cart badge");
+  }
+
   async navigateToLoginPage() {
     await this.sidebarToggler.click();
     await this.loginSidebarButton.click();
@@ -35,6 +39,10 @@ class CommonPage {
   async navigateToCatalogPage() {
     await this.sidebarToggler.click();
     await this.catalogSidebarButton.click();
+  }
+
+  async navigateToMyCart() {
+    await this.cartBadgeButton.click();
   }
 
   async logout() {
