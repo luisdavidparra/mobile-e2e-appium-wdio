@@ -29,6 +29,20 @@ class CartPage {
     return $("~total price");
   }
 
+  get emptyCartTitle() {
+    return $('android=new UiSelector().text("No Items")');
+  }
+
+  get emptyCartDescription() {
+    return $(
+      'android=new UiSelector().text("Oh no! Your cart is empty. Fill it up with swag to complete your purchase.")',
+    );
+  }
+
+  get emptyCartGoShoppingButton() {
+    return $("~Go Shopping button");
+  }
+
   async getProductDetailsByName(productName) {
     const products = await getAllItemsByScrolling(
       this.productContainerSelector,

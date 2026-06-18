@@ -14,8 +14,8 @@ describe("US-03 - Shopping Cart Management", () => {
 
     await CommonPage.navigateToMyCart();
 
-    const productCartDetails = await CartPage.getProductDetailsByName(productName);
-    await expect(Number(productCartDetails.amount)).toEqual(productsAmount);
+    const productDetails = await CartPage.getProductDetailsByName(productName);
+    await expect(Number(productDetails.amount)).toEqual(productsAmount);
 
     const amountText = `${productsAmount} item${productsAmount > 1 && "s"}`;
     await expect(await CartPage.getTotalCartProducts()).toEqual(amountText);
@@ -42,5 +42,22 @@ describe("US-03 - Shopping Cart Management", () => {
 
     const productDetails = await CartPage.getProductDetailsByName(productName);
     await expect(Number(productDetails.amount)).toEqual(expectedAmount);
+  });
+
+  it("TC-012 - should display empty cart after removing all products", async () => {
+    const productName = detailedProduct.name;
+    const amount = 3;
+
+    await CatalogPage.tapProductByName(productName);
+    await ProductPage.addProductToShoppingCart(amount);
+    await CommonPage.navigateToMyCart();
+
+    for (let i = 0; i < amount; i++) {
+      await CartPage.decreaseProductQuantity(productName);
+    }
+
+    await expect(CartPage.emptyCartTitle).toBeDisplayed();
+    await expect(CartPage.emptyCartDescription).toBeDisplayed();
+    await expect(CartPage.emptyCartGoShoppingButton).toBeDisplayed();
   });
 });

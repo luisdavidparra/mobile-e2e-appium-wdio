@@ -16,7 +16,7 @@ Mobile test automation suite for the Sauce Labs My Demo App (Android).
 |------------|-------------|-------|
 | US-01 | Authentication | 3 |
 | US-02 | Catalog & Filters | 5 |
-| US-03 | Cart Management | 4 |
+| US-03 | Cart Management | 3 |
 | US-04 | Checkout | 3 |
 
 ## Prerequisites
