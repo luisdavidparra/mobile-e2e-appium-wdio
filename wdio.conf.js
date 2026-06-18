@@ -59,7 +59,10 @@ exports.config = {
   },
 
   beforeTest: async function () {
-    await resetApp();
     await dismissPopupIfPresent();
+  },
+
+  afterTest: async function () {
+    await resetApp();
   },
 };

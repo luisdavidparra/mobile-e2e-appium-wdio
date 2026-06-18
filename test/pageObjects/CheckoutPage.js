@@ -43,6 +43,21 @@ class CheckoutPage {
     };
   }
 
+  get placeOrderButton() {
+    return $("~Place Order button");
+  }
+  get completedCheckoutTitle() {
+    return $('android=new UiSelector().text("Checkout Complete")');
+  }
+
+  get completedCheckoutDeliveryMessage() {
+    return $('android=new UiSelector().text("Your new swag is on its way")');
+  }
+
+  get continueShoppingButton() {
+    return $("~Continue Shopping button");
+  }
+
   async proceedToReviewOrder() {
     await this.reviewOrderButton.click(); // validates
     await this.reviewOrderButton.click(); // advances if no errors

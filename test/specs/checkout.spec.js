@@ -57,4 +57,27 @@ describe("US-04 - Checkout", () => {
     await expect(paymentValues).toContain(cardInfo.cardNumber);
     await expect(paymentValues).toContain(`Exp: ${cardInfo.expirationDate}`);
   });
+
+  it("TC-015 - should complete checkout successfully", async () => {
+    await CommonPage.loginAsStandardUser();
+    await CatalogPage.tapProductByName(detailedProduct.name);
+    await ProductPage.addProductToShoppingCart(1);
+    await CommonPage.navigateToMyCart();
+
+    await CartPage.proceedToCheckoutButton.click();
+
+    const shipInfo = standard.shippingInfo;
+    const cardInfo = standard.cardInfo;
+
+    await CheckoutPage.fillShippingInfo(shipInfo);
+    await CheckoutPage.toPaymentButton.click();
+    await CheckoutPage.fillPaymentInfo(cardInfo);
+    await CheckoutPage.proceedToReviewOrder();
+
+    await CheckoutPage.placeOrderButton.click();
+
+    await expect(CheckoutPage.completedCheckoutTitle).toBeDisplayed();
+    await expect(CheckoutPage.completedCheckoutDeliveryMessage).toBeDisplayed();
+    await expect(CheckoutPage.continueShoppingButton).toBeDisplayed();
+  });
 });
