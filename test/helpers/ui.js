@@ -49,7 +49,16 @@ async function waitElementForDisplayed(element) {
   await element.waitForDisplayed({ timeout: 5000 });
 }
 
+async function getTextsFromElements(elements) {
+  const texts = [];
+  for (const el of elements) {
+    texts.push(await el.getText());
+  }
+  return texts;
+}
+
 module.exports = {
   getAllItemsByScrolling,
   waitElementForDisplayed,
+  getTextsFromElements,
 };
