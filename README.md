@@ -1,14 +1,39 @@
-# Saucelabs Appium Android - Mobile QA Automation
+# 📱 Mobile E2E Testing with Appium + WebdriverIO
 
-Mobile test automation suite for the Sauce Labs My Demo App (Android).
+Automated end‑to‑end tests for an Android application using Appium, WebdriverIO, and Allure Reports, running locally on an Android emulator.
 
-## Tech Stack
+## 📌 Features
+- End‑to‑end tests for Android
+- Page Object Model (POM)
+- WebdriverIO
+- Appium (UiAutomator2)
+- Local execution on Android Emulator
+- Allure Reports
+
+## 📊 Allure Reports
+![Allure Overview](assets/report-overview.png)
+![Test Suites](assets/report-suites.png)
+
+## 🗂 Project Structure
+```
+├── test
+│   ├── specs          # Test cases
+│   ├── pageObjects    # Page Object Model
+│   ├── helpers        # ui helpers
+│   └── data           # Test data
+├── wdio.conf.js       # WDIO config
+├── package.json
+└── README.md
+```
+
+## 🛠 Tech Stack
 
 - Appium
 - Javascript (Node.js)
 - WebdriverIO
 - UiAutomator2
 - Mocha
+- Allure Reports
 
 ## Test Coverage
 
@@ -21,7 +46,7 @@ Mobile test automation suite for the Sauce Labs My Demo App (Android).
 
 ## Prerequisites
 
-- Node.js 18
+- Node.js 20
 - Android Studio + AVD (Android 17)
 - Java JDK 11
 
@@ -32,14 +57,37 @@ npm install
 appium driver install uiautomator2
 ```
 
-## Run Tests
+## 🚀 Run Locally
 
-1. Start Appium server in a separate terminal:
+### 1. Clone the repository
+
 ```bash
-appium
+git clone https://github.com/luisdavidparra/mobile-e2e-appium-wdio
 ```
 
-2. Run the test suite:
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start emulated android device
+
+From Android Studio
+
+### 4. Run tests
+
 ```bash
 npm test
 ```
+
+## 📊 Test Report
+
+After running the tests:
+
+```bash
+npm run report
+```
+
+## 🎥 Test Execution (GIF)
+![Test Execution](assets/test-running.gif)
